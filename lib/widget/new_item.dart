@@ -24,7 +24,9 @@ class _NewItemState extends State<NewItem> {
   void _addItem() async {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
-      isSending = true;
+      setState(() {
+        isSending = true;
+      });
       final url = Uri.https(
           'shopping-list-app-flutte-ea3cf-default-rtdb.asia-southeast1.firebasedatabase.app',
           'shopping-list.json');
