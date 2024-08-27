@@ -15,15 +15,18 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
+  final items = ["KG","GM","Ltr","ml"]; 
   final _formkey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredQnt = 1;
   var _selectedCategory = categories[Categories.vegetables];
   var isSending = false;
+  var _selectedUnit = "KG";
 
   void _addItem() async {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
+      print(_selectedUnit);
       setState(() {
         isSending = true;
       });
@@ -36,7 +39,8 @@ class _NewItemState extends State<NewItem> {
         body: json.encode({
           "name": _enteredName,
           "quantity": _enteredQnt,
-          "category": _selectedCategory!.title
+          "category": _selectedCategory!.title,
+          "unit": _selectedUnit,
         }),
       );
       final Map<String, dynamic> item = json.decode(response.body);
@@ -45,7 +49,8 @@ class _NewItemState extends State<NewItem> {
             id: item['name'],
             name: _enteredName,
             quantity: _enteredQnt,
-            category: _selectedCategory!));
+            category: _selectedCategory!,
+            unit: _selectedUnit,));
       }
     }
   }
@@ -83,25 +88,43 @@ class _NewItemState extends State<NewItem> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        label: Text("Quantity"),
+                  SizedBox(
+                    width: 70,
+                    child: Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          label: Text("Quantity"),
+                        ),
+                        initialValue: _enteredQnt.toString(),
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              int.tryParse(value) == null ||
+                              int.tryParse(value)! <= 0) {
+                            return 'Must be a Valid, Positive number.';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _enteredQnt = int.tryParse(value!)!;
+                        },
                       ),
-                      initialValue: _enteredQnt.toString(),
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            int.tryParse(value) == null ||
-                            int.tryParse(value)! <= 0) {
-                          return 'Must be a Valid, Positive number.';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _enteredQnt = int.tryParse(value!)!;
-                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 84,
+                    child: Expanded(
+                      child: DropdownButtonFormField(
+                        value: _selectedUnit,
+                        items:  items.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(), onChanged: (value) {
+                          _selectedUnit = value!;
+                        }),
                     ),
                   ),
                   const SizedBox(
@@ -116,10 +139,12 @@ class _NewItemState extends State<NewItem> {
                               value: category.value,
                               child: Row(
                                 children: [
-                                  Container(
-                                      height: 16,
-                                      width: 16,
-                                      color: category.value.color),
+                                  // Container(
+                                  //     height: 16,
+                                  //     width: 16,
+                                  //     color: category.value.color),
+                                      Icon(const IconData(0xe395, fontFamily: 'MaterialIcons'), color: category.value.color,),
+            
                                   const SizedBox(
                                     width: 6,
                                   ),

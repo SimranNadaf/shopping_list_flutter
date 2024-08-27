@@ -29,7 +29,7 @@ class _GrocaryListState extends State<GrocaryList> {
         'shopping-list.json');
     try {
       final response = await http.get(url);
-
+print(response.body);
       if (response.statusCode >= 400) {
         setState(() {
           _error = "Fail to Fetch data, Please Try again later!";
@@ -54,7 +54,8 @@ class _GrocaryListState extends State<GrocaryList> {
             id: item.key,
             name: item.value['name'],
             quantity: item.value['quantity'],
-            category: category));
+            category: category,
+            unit: item.value['unit']));
       }
       setState(() {
         _groceryItems = loaditems;
@@ -156,16 +157,24 @@ class _GrocaryListState extends State<GrocaryList> {
           },
           child: ListTile(
             title: Text(_groceryItems[index].name),
-            leading: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: _groceryItems[index].category.color,
-              ),
-              width: 24,
-              height: 24,
-              // color: _groceryItems[index].category.color,
+            leading: Icon(const IconData(0xe395, fontFamily: 'MaterialIcons'), color: _groceryItems[index].category.color,),
+            // leading: Container(
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(20),
+            //     color: _groceryItems[index].category.color,
+            //   ),
+            //   width: 24,
+            //   height: 24,
+            //   // color: _groceryItems[index].category.color,
+            // ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(_groceryItems[index].quantity.toString()),
+                const SizedBox(width: 2,),
+                Text(_groceryItems[index].unit),
+              ],
             ),
-            trailing: Text(_groceryItems[index].quantity.toString()),
           ),
         ),
       );
