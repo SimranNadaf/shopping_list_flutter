@@ -15,7 +15,7 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
-  final items = ["KG","GM","Ltr","ml"]; 
+  final items = ["KG", "GM", "Ltr", "ml", "Pcs"];
   final _formkey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredQnt = 1;
@@ -26,7 +26,6 @@ class _NewItemState extends State<NewItem> {
   void _addItem() async {
     if (_formkey.currentState!.validate()) {
       _formkey.currentState!.save();
-      print(_selectedUnit);
       setState(() {
         isSending = true;
       });
@@ -46,11 +45,12 @@ class _NewItemState extends State<NewItem> {
       final Map<String, dynamic> item = json.decode(response.body);
       if (context.mounted) {
         Navigator.of(context).pop(GroceryItem(
-            id: item['name'],
-            name: _enteredName,
-            quantity: _enteredQnt,
-            category: _selectedCategory!,
-            unit: _selectedUnit,));
+          id: item['name'],
+          name: _enteredName,
+          quantity: _enteredQnt,
+          category: _selectedCategory!,
+          unit: _selectedUnit,
+        ));
       }
     }
   }
@@ -116,15 +116,17 @@ class _NewItemState extends State<NewItem> {
                     width: 84,
                     child: Expanded(
                       child: DropdownButtonFormField(
-                        value: _selectedUnit,
-                        items:  items.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(), onChanged: (value) {
-                          _selectedUnit = value!;
-                        }),
+                          value: _selectedUnit,
+                          items: items
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            _selectedUnit = value!;
+                          }),
                     ),
                   ),
                   const SizedBox(
@@ -143,8 +145,12 @@ class _NewItemState extends State<NewItem> {
                                   //     height: 16,
                                   //     width: 16,
                                   //     color: category.value.color),
-                                      Icon(const IconData(0xe395, fontFamily: 'MaterialIcons'), color: category.value.color,),
-            
+                                  Icon(
+                                    const IconData(0xe395,
+                                        fontFamily: 'MaterialIcons'),
+                                    color: category.value.color,
+                                  ),
+
                                   const SizedBox(
                                     width: 6,
                                   ),

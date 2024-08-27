@@ -29,7 +29,6 @@ class _GrocaryListState extends State<GrocaryList> {
         'shopping-list.json');
     try {
       final response = await http.get(url);
-print(response.body);
       if (response.statusCode >= 400) {
         setState(() {
           _error = "Fail to Fetch data, Please Try again later!";
@@ -78,20 +77,21 @@ print(response.body);
     setState(() {
       _groceryItems.add(item!);
     });
-    if(context.mounted){
+    if (context.mounted) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Item added successfully!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Item added successfully!")));
     }
-    }
+  }
 
   void removeItem(GroceryItem item) async {
-    
     final index = _groceryItems.indexOf(item);
     setState(() {
       _groceryItems.remove(item);
     });
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Item Deleted successfully!")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Item Deleted successfully!")));
     final url = Uri.https(
         'shopping-list-app-flutte-ea3cf-default-rtdb.asia-southeast1.firebasedatabase.app',
         'shopping-list/${item.id}.json');
@@ -100,9 +100,9 @@ print(response.body);
       setState(() {
         _groceryItems.insert(index, item);
       });
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Fail to delete item. Please try again later!")));
-    
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Fail to delete item. Please try again later!")));
     }
   }
 
@@ -136,28 +136,47 @@ print(response.body);
           key: ValueKey(_groceryItems[index].id),
           background: Container(
             color: Colors.red,
-            child: const Padding(padding: 
-             EdgeInsets.fromLTRB(2,2,2,2),
-            child:  Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.delete),
-                Text("Deleting..."),
-              ],
-            ),),
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.delete),
+                  Text("Deleting..."),
+                ],
+              ),
+            ),
           ),
-          confirmDismiss: (direction) =>
-          showDialog(context: context, builder: (ctx)=> AlertDialog(title: const Text("Please Confirm"),content: const Text("Are you sure to delete item?"),
-        actions: [TextButton(onPressed: () {
-        Navigator.of(context).pop(false);
-        }, child: const Text("No"),), TextButton(onPressed: (){  Navigator.of(context).pop(true);}, child: const Text("Yes"),)],),),
-
+          confirmDismiss: (direction) => showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text("Please Confirm"),
+              content: const Text("Are you sure to delete item?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text("No"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: const Text("Yes"),
+                )
+              ],
+            ),
+          ),
           onDismissed: (direction) {
             removeItem(_groceryItems[index]);
           },
           child: ListTile(
             title: Text(_groceryItems[index].name),
-            leading: Icon(const IconData(0xe395, fontFamily: 'MaterialIcons'), color: _groceryItems[index].category.color,),
+            leading: Icon(
+              const IconData(0xe395, fontFamily: 'MaterialIcons'),
+              color: _groceryItems[index].category.color,
+            ),
             // leading: Container(
             //   decoration: BoxDecoration(
             //     borderRadius: BorderRadius.circular(20),
@@ -171,7 +190,9 @@ print(response.body);
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(_groceryItems[index].quantity.toString()),
-                const SizedBox(width: 2,),
+                const SizedBox(
+                  width: 2,
+                ),
                 Text(_groceryItems[index].unit),
               ],
             ),
