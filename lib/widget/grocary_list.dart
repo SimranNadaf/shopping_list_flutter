@@ -174,7 +174,7 @@ class _GrocaryListState extends State<GrocaryList> {
           child: ListTile(
             title: Text(_groceryItems[index].name),
             leading: Icon(
-              const IconData(0xe395, fontFamily: 'MaterialIcons'),
+              _groceryItems[index].category.icon,
               color: _groceryItems[index].category.color,
             ),
             // leading: Container(

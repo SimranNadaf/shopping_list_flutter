@@ -146,8 +146,7 @@ class _NewItemState extends State<NewItem> {
                                   //     width: 16,
                                   //     color: category.value.color),
                                   Icon(
-                                    const IconData(0xe395,
-                                        fontFamily: 'MaterialIcons'),
+                                    category.value.icon,
                                     color: category.value.color,
                                   ),
 
